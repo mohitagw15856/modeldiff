@@ -1,0 +1,360 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/mohitagw15856/modeldiff/main/schema/models.schema.json",
+  "title": "modeldiff model catalogue",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "generated_at",
+    "sources",
+    "models"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "0.1"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "sources": {
+      "type": "array",
+      "description": "Every upstream source consulted for this build, with the exact time it was read.",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "url",
+          "fetched_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "fetched_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "models": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/model"
+      }
+    }
+  },
+  "$defs": {
+    "support": {
+      "description": "Tri-state+ support. 'rejected' means sending it returns an API error - the migration-critical case. 'ignored' means it is accepted and silently does nothing - the dangerous case. Never conflate these with false.",
+      "enum": [
+        "supported",
+        "rejected",
+        "ignored",
+        "unknown"
+      ]
+    },
+    "priceRow": {
+      "type": "object",
+      "description": "USD per 1,000,000 tokens. null means the provider does not publish or does not offer this line item; 0 means genuinely free.",
+      "additionalProperties": false,
+      "properties": {
+        "input": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "output": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "cache_read": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "cache_write_5m": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "cache_write_1h": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "reasoning": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Separately-billed internal reasoning tokens. null means reasoning bills as output (the common case) or the model does not reason."
+        },
+        "image_input": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "audio_input": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        }
+      }
+    },
+    "model": {
+      "type": "object",
+      "required": [
+        "id",
+        "provider",
+        "display_name",
+        "lifecycle",
+        "context",
+        "pricing",
+        "tokenizer",
+        "params",
+        "provenance"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Canonical modeldiff id: provider/model-slug."
+        },
+        "provider_model_id": {
+          "type": "string",
+          "description": "The exact string you send in an API request to the first-party provider."
+        },
+        "provider": {
+          "type": "string"
+        },
+        "family": {
+          "type": "string"
+        },
+        "display_name": {
+          "type": "string"
+        },
+        "lifecycle": {
+          "type": "object",
+          "required": [
+            "status"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "ga",
+                "preview",
+                "deprecated",
+                "retired",
+                "unknown"
+              ]
+            },
+            "released": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "knowledge_cutoff": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "deprecation_announced": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "shutdown_date": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Date the endpoint stops serving. The single most under-published field in the industry."
+            },
+            "successor": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "context": {
+          "type": "object",
+          "properties": {
+            "input_max": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "output_max": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            }
+          }
+        },
+        "pricing": {
+          "type": "object",
+          "required": [
+            "currency",
+            "unit",
+            "modes"
+          ],
+          "properties": {
+            "currency": {
+              "const": "USD"
+            },
+            "unit": {
+              "const": "usd_per_1m_tokens"
+            },
+            "modes": {
+              "type": "object",
+              "description": "A model is not one price. Keys seen in the wild: standard, batch, priority, fast. 'fast' can be 2x standard for the SAME weights.",
+              "additionalProperties": {
+                "$ref": "#/$defs/priceRow"
+              },
+              "required": [
+                "standard"
+              ]
+            },
+            "platforms": {
+              "type": "object",
+              "description": "Per-cloud overrides. Bedrock and Vertex are separately priced from first-party and routinely differ.",
+              "additionalProperties": {
+                "$ref": "#/$defs/priceRow"
+              }
+            },
+            "cache_model": {
+              "enum": [
+                "write_premium",
+                "storage_per_hour",
+                "automatic",
+                "none",
+                "unknown"
+              ],
+              "description": "How caching is BILLED, which is not uniform. write_premium = one-off surcharge to write, cheap reads (Anthropic-style). storage_per_hour = rent per hour of residency, a DIFFERENT UNIT that cannot be compared to a per-token write fee (Gemini-style). automatic = provider caches transparently, discounted reads, no write fee. Flattening these into one 'cache write price' field, as reseller catalogues do, silently misprices every cache-heavy agent workload."
+            }
+          }
+        },
+        "tokenizer": {
+          "type": "object",
+          "required": [
+            "family"
+          ],
+          "properties": {
+            "family": {
+              "type": "string",
+              "description": "Tokenizer lineage. Prices are NOT comparable across families."
+            },
+            "encoding": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "tokens_per_1k_chars": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "description": "Measured on the shared modeldiff corpus. This is what makes $/Mtok comparable. null until measured."
+            },
+            "cost_index": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "description": "tokens_per_1k_chars normalised against the reference tokenizer. Multiply sticker price by this for true relative cost."
+            }
+          }
+        },
+        "params": {
+          "type": "object",
+          "description": "Request-parameter support. Powers the migration diff: a param that is 'supported' on A and 'rejected' on B is a hard break.",
+          "additionalProperties": {
+            "$ref": "#/$defs/support"
+          }
+        },
+        "features": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/support"
+          }
+        },
+        "notes": {
+          "type": "array",
+          "description": "Human-readable gotchas that do not fit a boolean. Silent behaviour changes go here.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "provenance": {
+          "type": "array",
+          "minItems": 1,
+          "description": "Which source supplied which field group, and when. Every price in this file is traceable to a URL and a timestamp.",
+          "items": {
+            "type": "object",
+            "required": [
+              "source",
+              "fields"
+            ],
+            "properties": {
+              "source": {
+                "type": "string"
+              },
+              "fields": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "confidence": {
+                "enum": [
+                  "verified",
+                  "derived",
+                  "cached",
+                  "unverified"
+                ]
+              },
+              "as_of": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

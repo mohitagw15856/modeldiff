@@ -1,0 +1,39 @@
+{
+  "name": "modeldiff",
+  "version": "0.1.0",
+  "description": "Machine-readable price, capability and breaking-change data for every frontier LLM. Built for answering \"what changes if I switch\", not \"which is best\".",
+  "type": "module",
+  "main": "data/models.json",
+  "exports": {
+    ".": "./data/models.json",
+    "./schema": "./schema/models.schema.json"
+  },
+  "files": [
+    "data/models.json",
+    "data/badges",
+    "schema/models.schema.json",
+    "README.md",
+    "FINDINGS.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "node src/build.mjs && node src/findings.mjs",
+    "validate": "node src/validate.mjs",
+    "check": "npm run build && npm run validate",
+    "findings": "node src/findings.mjs"
+  },
+  "keywords": [
+    "llm",
+    "pricing",
+    "tokenizer",
+    "anthropic",
+    "openai",
+    "model-comparison",
+    "deprecation"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mohitagw15856/modeldiff.git"
+  }
+}

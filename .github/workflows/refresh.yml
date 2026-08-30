@@ -1,0 +1,63 @@
+name: refresh catalogue
+
+# The whole premise: a hand-maintained model tracker is stale within weeks.
+# This runs daily, rebuilds from upstream, and opens a PR only when something
+# actually changed - so the commit history becomes the industry changelog.
+on:
+  schedule:
+    - cron: '17 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Rebuild catalogue
+        run: node src/build.mjs
+
+      - name: Regenerate findings and badges
+        run: node src/findings.mjs
+
+      - name: Validate invariants
+        run: node src/validate.mjs
+
+      - name: Summarise changes
+        id: diff
+        run: |
+          {
+            echo 'summary<<CHANGELOG_EOF'
+            node src/changelog.mjs
+            echo 'CHANGELOG_EOF'
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Open pull request on change
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: |
+            data: refresh catalogue
+
+            ${{ steps.diff.outputs.summary }}
+          branch: auto/refresh-catalogue
+          delete-branch: true
+          title: 'data: catalogue refresh'
+          body: |
+            Automated rebuild from upstream sources.
+
+            ```
+            ${{ steps.diff.outputs.summary }}
+            ```
+
+            Prices and capabilities here are machine-derived and marked
+            `unverified` unless a first-party overlay covers them. Review
+            lifecycle and price changes before merging.
+          labels: automated

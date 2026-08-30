@@ -1,0 +1,232 @@
+{
+  "source": {
+    "id": "anthropic-first-party",
+    "url": "https://docs.claude.com/en/docs/about-claude/models/overview",
+    "as_of": "2026-06-24",
+    "confidence": "cached",
+    "note": "Hand-transcribed from Anthropic's model and migration documentation. Encodes what ERRORS on migration - the data no leaderboard carries. Re-verify against the live pricing page before relying on figures."
+  },
+  "models": {
+    "anthropic/claude-fable-5": {
+      "provider_model_id": "claude-fable-5",
+      "family": "claude",
+      "tokenizer": {
+        "family": "Claude-4.7+"
+      },
+      "features": {
+        "assistant_prefill": "rejected",
+        "thinking_budget_tokens": "rejected",
+        "fast_mode": "rejected",
+        "priority_tier": "supported"
+      },
+      "notes": [
+        "Sampling parameters (temperature/top_p/top_k) return HTTP 400. Code that sets temperature unconditionally breaks on migration.",
+        "Assistant-message prefill returns HTTP 400. Use structured outputs to constrain response shape instead.",
+        "thinking.budget_tokens is removed and returns HTTP 400; use adaptive thinking with output_config.effort.",
+        "SILENT CHANGE: thinking `display` defaults to 'omitted'; on Opus 4.6/Sonnet 4.6 it defaulted to 'summarized'. Reasoning is still billed either way.",
+        "Thinking cannot be disabled: thinking:{type:'disabled'} returns HTTP 400. Omit the parameter entirely.",
+        "Not available under zero-data-retention; such orgs get HTTP 400.",
+        "Tokenizer changed at Opus 4.7: identical text costs roughly 1.0x-1.35x the tokens of the pre-4.7 tokenizer. A lower $/Mtok here can still be a higher bill.",
+        "Cache billing is a one-off write premium (~1.25x input) with cheap reads; this is NOT the same unit as a per-hour cache storage rent."
+      ],
+      "params": {
+        "temperature": "rejected",
+        "top_p": "rejected",
+        "top_k": "rejected"
+      },
+      "pricing": {
+        "cache_model": "write_premium"
+      }
+    },
+    "anthropic/claude-opus-5": {
+      "provider_model_id": "claude-opus-5",
+      "family": "claude",
+      "tokenizer": {
+        "family": "Claude-4.7+"
+      },
+      "features": {
+        "assistant_prefill": "rejected",
+        "thinking_budget_tokens": "rejected",
+        "fast_mode": "supported",
+        "priority_tier": "rejected"
+      },
+      "notes": [
+        "Sampling parameters (temperature/top_p/top_k) return HTTP 400. Code that sets temperature unconditionally breaks on migration.",
+        "Assistant-message prefill returns HTTP 400. Use structured outputs to constrain response shape instead.",
+        "thinking.budget_tokens is removed and returns HTTP 400; use adaptive thinking with output_config.effort.",
+        "SILENT CHANGE: omitting `thinking` runs adaptive thinking by default. On Opus 4.8/4.7 the same request runs with thinking OFF. Identical code, different behaviour and cost.",
+        "SILENT CHANGE: thinking `display` defaults to 'omitted'; on Opus 4.6/Sonnet 4.6 it defaulted to 'summarized'. Reasoning is still billed either way.",
+        "Tokenizer changed at Opus 4.7: identical text costs roughly 1.0x-1.35x the tokens of the pre-4.7 tokenizer. A lower $/Mtok here can still be a higher bill.",
+        "Cache billing is a one-off write premium (~1.25x input) with cheap reads; this is NOT the same unit as a per-hour cache storage rent."
+      ],
+      "params": {
+        "temperature": "rejected",
+        "top_p": "rejected",
+        "top_k": "rejected"
+      },
+      "pricing": {
+        "cache_model": "write_premium"
+      }
+    },
+    "anthropic/claude-opus-4.8": {
+      "provider_model_id": "claude-opus-4-8",
+      "family": "claude",
+      "tokenizer": {
+        "family": "Claude-4.7+"
+      },
+      "features": {
+        "assistant_prefill": "rejected",
+        "thinking_budget_tokens": "rejected",
+        "fast_mode": "supported",
+        "priority_tier": "supported"
+      },
+      "notes": [
+        "Sampling parameters (temperature/top_p/top_k) return HTTP 400. Code that sets temperature unconditionally breaks on migration.",
+        "Assistant-message prefill returns HTTP 400. Use structured outputs to constrain response shape instead.",
+        "thinking.budget_tokens is removed and returns HTTP 400; use adaptive thinking with output_config.effort.",
+        "SILENT CHANGE: omitting `thinking` runs WITHOUT thinking. Opus 5 defaults the same request to adaptive thinking.",
+        "SILENT CHANGE: thinking `display` defaults to 'omitted'; on Opus 4.6/Sonnet 4.6 it defaulted to 'summarized'. Reasoning is still billed either way.",
+        "Tokenizer changed at Opus 4.7: identical text costs roughly 1.0x-1.35x the tokens of the pre-4.7 tokenizer. A lower $/Mtok here can still be a higher bill.",
+        "Cache billing is a one-off write premium (~1.25x input) with cheap reads; this is NOT the same unit as a per-hour cache storage rent."
+      ],
+      "params": {
+        "temperature": "rejected",
+        "top_p": "rejected",
+        "top_k": "rejected"
+      },
+      "pricing": {
+        "cache_model": "write_premium"
+      }
+    },
+    "anthropic/claude-opus-4.7": {
+      "provider_model_id": "claude-opus-4-7",
+      "family": "claude",
+      "tokenizer": {
+        "family": "Claude-4.7+"
+      },
+      "features": {
+        "assistant_prefill": "rejected",
+        "thinking_budget_tokens": "rejected",
+        "fast_mode": "rejected",
+        "priority_tier": "supported"
+      },
+      "notes": [
+        "Sampling parameters (temperature/top_p/top_k) return HTTP 400. Code that sets temperature unconditionally breaks on migration.",
+        "Assistant-message prefill returns HTTP 400. Use structured outputs to constrain response shape instead.",
+        "thinking.budget_tokens is removed and returns HTTP 400; use adaptive thinking with output_config.effort.",
+        "SILENT CHANGE: omitting `thinking` runs WITHOUT thinking. Opus 5 defaults the same request to adaptive thinking.",
+        "SILENT CHANGE: thinking `display` defaults to 'omitted'; on Opus 4.6/Sonnet 4.6 it defaulted to 'summarized'. Reasoning is still billed either way.",
+        "PHANTOM PRICING UPSTREAM: fast mode was REMOVED on this model - speed:'fast' now errors - yet reseller catalogues still list a priced `-fast` variant. Do not budget against it.",
+        "Tokenizer changed at Opus 4.7: identical text costs roughly 1.0x-1.35x the tokens of the pre-4.7 tokenizer. A lower $/Mtok here can still be a higher bill.",
+        "Cache billing is a one-off write premium (~1.25x input) with cheap reads; this is NOT the same unit as a per-hour cache storage rent."
+      ],
+      "params": {
+        "temperature": "rejected",
+        "top_p": "rejected",
+        "top_k": "rejected"
+      },
+      "pricing": {
+        "modes": {
+          "fast": {
+            "input": null,
+            "output": null,
+            "cache_read": null,
+            "cache_write_5m": null,
+            "cache_write_1h": null,
+            "reasoning": null,
+            "image_input": null,
+            "audio_input": null
+          }
+        },
+        "cache_model": "write_premium"
+      }
+    },
+    "anthropic/claude-opus-4.6": {
+      "provider_model_id": "claude-opus-4-6",
+      "family": "claude",
+      "tokenizer": {
+        "family": "Claude-pre-4.7"
+      },
+      "features": {
+        "assistant_prefill": "rejected",
+        "thinking_budget_tokens": "supported",
+        "fast_mode": "rejected",
+        "priority_tier": "supported"
+      },
+      "notes": [
+        "Assistant-message prefill returns HTTP 400. Use structured outputs to constrain response shape instead.",
+        "thinking.budget_tokens still functions but is deprecated; it is removed on later models.",
+        "Cache billing is a one-off write premium (~1.25x input) with cheap reads; this is NOT the same unit as a per-hour cache storage rent."
+      ],
+      "pricing": {
+        "cache_model": "write_premium"
+      }
+    },
+    "anthropic/claude-sonnet-5": {
+      "provider_model_id": "claude-sonnet-5",
+      "family": "claude",
+      "tokenizer": {
+        "family": "Claude-pre-4.7"
+      },
+      "features": {
+        "assistant_prefill": "rejected",
+        "thinking_budget_tokens": "rejected",
+        "fast_mode": "rejected",
+        "priority_tier": "rejected"
+      },
+      "notes": [
+        "Sampling parameters (temperature/top_p/top_k) return HTTP 400. Code that sets temperature unconditionally breaks on migration.",
+        "Assistant-message prefill returns HTTP 400. Use structured outputs to constrain response shape instead.",
+        "thinking.budget_tokens is removed and returns HTTP 400; use adaptive thinking with output_config.effort.",
+        "SILENT CHANGE: thinking `display` defaults to 'omitted'; on Opus 4.6/Sonnet 4.6 it defaulted to 'summarized'. Reasoning is still billed either way.",
+        "Cache billing is a one-off write premium (~1.25x input) with cheap reads; this is NOT the same unit as a per-hour cache storage rent."
+      ],
+      "params": {
+        "temperature": "rejected",
+        "top_p": "rejected",
+        "top_k": "rejected"
+      },
+      "pricing": {
+        "cache_model": "write_premium"
+      }
+    },
+    "anthropic/claude-sonnet-4.6": {
+      "provider_model_id": "claude-sonnet-4-6",
+      "family": "claude",
+      "tokenizer": {
+        "family": "Claude-pre-4.7"
+      },
+      "features": {
+        "assistant_prefill": "rejected",
+        "thinking_budget_tokens": "supported",
+        "fast_mode": "rejected",
+        "priority_tier": "supported"
+      },
+      "notes": [
+        "Assistant-message prefill returns HTTP 400. Use structured outputs to constrain response shape instead.",
+        "thinking.budget_tokens still functions but is deprecated; it is removed on later models.",
+        "Cache billing is a one-off write premium (~1.25x input) with cheap reads; this is NOT the same unit as a per-hour cache storage rent."
+      ],
+      "pricing": {
+        "cache_model": "write_premium"
+      }
+    },
+    "anthropic/claude-haiku-4.5": {
+      "provider_model_id": "claude-haiku-4-5",
+      "family": "claude",
+      "tokenizer": {
+        "family": "Claude-pre-4.7"
+      },
+      "features": {
+        "fast_mode": "rejected",
+        "priority_tier": "supported"
+      },
+      "notes": [
+        "Cache billing is a one-off write premium (~1.25x input) with cheap reads; this is NOT the same unit as a per-hour cache storage rent."
+      ],
+      "pricing": {
+        "cache_model": "write_premium"
+      }
+    }
+  }
+}

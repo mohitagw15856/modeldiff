@@ -4,14 +4,14 @@
 `data/models.json` — nothing in this file is written by hand, so it cannot drift from
 the data. A catalogue refresh can rewrite these leaderboards on its own.*
 
-**352 models · 18 tokenizer families · 49.6% of the capability matrix verified**
+**368 models · 18 tokenizer families · 49.6% of the capability matrix verified**
 
 ---
 
 ## 🎭 The Same Model, Wildly Different Bills
 
-Upstream catalogues list **396 entries** for **352 actual models**. The other
-**44** are pricing *modes* — identical weights, different tariff — listed as if they
+Upstream catalogues list **445 entries** for **368 actual models**. The other
+**77** are pricing *modes* — identical weights, different tariff — listed as if they
 were separate products. Rank a leaderboard on that feed and you count the same model
 three times, at whichever price flatters the chart.
 
@@ -21,20 +21,20 @@ Biggest spread between the cheapest and dearest way to call one model:
 |---|---|---|---|
 | `google/gemma-4-31b-it` | $0.09 (standard) | $0.39 (batch) | **4.3×** |
 | `openai/gpt-oss-120b` | $0.037 (standard) | $0.15 (batch) | **4.1×** |
-| `anthropic/claude-opus-4.8` | $2.5 (batch) | $10 (fast) | **4.0×** |
-| `anthropic/claude-opus-5` | $2.5 (batch) | $10 (fast) | **4.0×** |
-| `google/gemini-3.7-flash` | $0.1875 (batch) | $0.75 (standard) | **4.0×** |
-| `deepseek/deepseek-v4-flash-0731` | $0.065 (standard) | $0.14 (batch) | **2.2×** |
 | `anthropic/claude-fable-5` | $5 (batch) | $10 (standard) | **2.0×** |
+| `anthropic/claude-fable-5.1` | $5 (batch) | $10 (standard) | **2.0×** |
 | `anthropic/claude-haiku-4.5` | $0.5 (batch) | $1 (standard) | **2.0×** |
 | `anthropic/claude-opus-4.1` | $7.5 (batch) | $15 (standard) | **2.0×** |
 | `anthropic/claude-opus-4.5` | $2.5 (batch) | $5 (standard) | **2.0×** |
 | `anthropic/claude-opus-4.6` | $2.5 (batch) | $5 (standard) | **2.0×** |
 | `anthropic/claude-opus-4.7` | $2.5 (batch) | $5 (standard) | **2.0×** |
+| `anthropic/claude-opus-4.8` | $2.5 (batch) | $5 (standard) | **2.0×** |
+| `anthropic/claude-opus-5` | $2.5 (batch) | $5 (standard) | **2.0×** |
+| `anthropic/claude-sonnet-4.5` | $1.5 (batch) | $3 (standard) | **2.0×** |
 
 ## 💸 The Batch Tax
 
-"Batch is 50% off" is folk wisdom, not a rule. **11 models cost *more* in batch
+"Batch is 50% off" is folk wisdom, not a rule. **7 models cost *more* in batch
 mode than standard** — because the "standard" price is the cheapest routed host while
 batch is one specific host's tariff.
 
@@ -42,22 +42,18 @@ batch is one specific host's tariff.
 |---|---|---|---|
 | `google/gemma-4-31b-it` | $0.09 | $0.39 | **+333%** |
 | `openai/gpt-oss-120b` | $0.037 | $0.15 | **+305%** |
-| `deepseek/deepseek-v4-flash-0731` | $0.065 | $0.14 | **+115%** |
-| `deepseek/deepseek-v4-pro-0813` | $0.66 | $1.32 | **+100%** |
-| `z-ai/glm-5.3-flash` | $0.075 | $0.15 | **+100%** |
+| `deepseek/deepseek-v4-flash-0731` | $0.06 | $0.11 | **+83%** |
 | `qwen/qwen3.5-9b` | $0.1 | $0.17 | **+70%** |
 | `openai/gpt-oss-20b` | $0.03 | $0.05 | **+67%** |
-| `qwen/qwen3.8-2.4t-a95b` | $2 | $2.5 | **+25%** |
-| `nvidia/nemotron-3-ultra-550b-a55b` | $0.5 | $0.6 | **+20%** |
-| `meta/muse-glimmer-30b` | $0.3 | $0.35 | **+17%** |
+| `moonshotai/kimi-k3` | $2.648138 | $3 | **+13%** |
 | `thinkingmachines/inkling-small` | $0.45 | $0.5 | **+11%** |
 
 ## 🐈 Schrödinger's Cache
 
-Cache economics dominate real agent cost, and the data is a mess. Of 352 models,
-**198 publish a cache read price, only 58 publish a cache write price.**
+Cache economics dominate real agent cost, and the data is a mess. Of 368 models,
+**213 publish a cache read price, only 63 publish a cache write price.**
 
-Worse, the ones that publish aren't using the same unit. **190 models** have a
+Worse, the ones that publish aren't using the same unit. **205 models** have a
 cache price whose billing model is unresolved.
 
 And **19 models report a cache *write* that costs less than a normal read** — an
@@ -70,13 +66,13 @@ flattened into the same column as Anthropic-style write premiums. Anyone computi
 | `~google/gemini-flash-latest` | $0.75 | $0.041667 | 0.06× |
 | `google/gemini-3.6-flash` | $0.75 | $0.041667 | 0.06× |
 | `google/gemini-3.7-flash` | $0.75 | $0.041667 | 0.06× |
+| `google/gemini-3.8-flash` | $0.75 | $0.041667 | 0.06× |
 | `google/gemini-2.5-flash` | $0.3 | $0.083333 | 0.28× |
 | `google/gemini-2.5-flash-image` | $0.3 | $0.083333 | 0.28× |
 | `google/gemini-2.5-flash-lite` | $0.1 | $0.083333 | 0.83× |
 | `google/gemini-3-flash-preview` | $0.5 | $0.083333 | 0.17× |
 | `google/gemini-3.1-flash-lite` | $0.25 | $0.083333 | 0.33× |
 | `google/gemini-3.1-flash-lite-preview` | $0.25 | $0.083333 | 0.33× |
-| `google/gemini-3.5-flash` | $1.5 | $0.083333 | 0.06× |
 
 ## 👻 Phantom Tariffs
 
@@ -123,16 +119,16 @@ is ranking on sand.
 
 | Tokenizer family | Models |
 |---|---|
-| `Other` | 114 |
-| `GPT` | 58 |
+| `Other` | 122 |
+| `GPT` | 59 |
 | `Qwen3` | 36 |
+| `Router` | 24 |
 | `Gemini` | 24 |
 | `Mistral` | 21 |
-| `Router` | 18 |
 | `Qwen` | 18 |
-| `DeepSeek` | 13 |
-| `Llama3` | 12 |
-| `Claude` | 6 |
+| `DeepSeek` | 14 |
+| `Llama3` | 11 |
+| `Claude` | 7 |
 | `Grok` | 6 |
 | `Nova` | 5 |
 | `Claude-4.7+` | 4 |
@@ -147,7 +143,7 @@ repo, and it needs no API key — just a shared corpus and a local tokenizer.
 
 ## 🌑 Deprecation Blackout
 
-**3 of 352 models publish a shutdown date.**
+**2 of 368 models publish a shutdown date.**
 
 Providers bury the one date that can break your production on a deadline you did not
 choose. Upstream sentinel values like `2098-12-31` are stripped rather than passed
@@ -156,7 +152,6 @@ through as real dates.
 | Model | Shuts down |
 |---|---|
 | `dots-studio/dots-3-note-preview:free` | 2026-09-30 |
-| `moonshotai/kimi-k2.5` | 2026-08-31 |
 | `z-ai/glm-4.5` | 2026-12-31 |
 
 ---
